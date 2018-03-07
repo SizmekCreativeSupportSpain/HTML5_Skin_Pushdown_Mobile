@@ -1,0 +1,139 @@
+/* Resets */ 
+
+html, body, div, span, h1, h2, h3, h4, h5, h6, p, video, image { margin: 0; padding: 0; border: 0; } a img {border: 0;}
+
+/* ****** */
+
+body{
+	background-color: #FFF;
+}
+
+button {
+	position: absolute;
+	background-color: rgba(0,0,0,0);
+	border: none;
+	cursor: pointer;
+	outline: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	user-select: none;
+}
+
+#expansion{
+	position: absolute;
+	display: none;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+	background-color: #000;
+}
+
+#clickthroughButton {
+	top: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 50;
+}
+#expandButton {
+	top: 0;
+	width: 100%;
+	height: 90px;
+	background-color: transparent;
+	background-image: url(images/expand.png);
+	background-repeat: no-repeat;
+	background-size: 320px 90px;
+	background-position: center;
+	z-index: 999;
+}
+
+#staticImage {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-image: url(images/bg.jpg);
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	z-index: 30;
+	-webkit-animation:background ease-out 1;
+	   -moz-animation:background ease-out 1;
+			animation:background ease-out 1;
+}
+
+.button{
+	height: 44px;
+	width: 44px;
+	background-repeat: no-repeat;
+	background-position: center;
+	z-index: 99;
+}
+
+#closeButton {
+	display: none;
+	top: 10px;
+	right: 10px;
+	background-image: url(images/close.png);
+	
+}
+
+/*********UTILS**********/
+.centered {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translateX(-50%) translateY(-50%);
+        -ms-transform: translateX(-50%) translateY(-50%);
+            transform: translateX(-50%) translateY(-50%);
+}
+.centeredY {
+	position: absolute;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+}
+.centeredX {
+	position: absolute;
+	left: 50%;
+	-webkit-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+            transform: translateX(-50%);
+}
+
+@-webkit-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+   @-moz-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+		@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@-webkit-keyframes fadeOut { from { opacity:1; } to { opacity:0; } }
+   @-moz-keyframes fadeOut { from { opacity:1; } to { opacity:0; } }
+		@keyframes fadeOut { from { opacity:1; } to { opacity:0; } }
+ 
+.fade-in {
+	opacity:0;
+	-webkit-animation:fadeIn ease-out 1;  /* call our keyframe named fadeIn, use animattion ease-out and repeat it only 1 time */
+	   -moz-animation:fadeIn ease-out 1;
+			animation:fadeIn ease-out 1;
+ 
+	-webkit-animation-fill-mode:forwards;  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+	   -moz-animation-fill-mode:forwards;
+			animation-fill-mode:forwards;
+ 
+	-webkit-animation-duration:1s;
+	   -moz-animation-duration:1s;
+			animation-duration:1s;
+}
+.fade-out {
+	opacity:1;
+	-webkit-animation:fadeOut ease-out 1;  /* call our keyframe named fadeOut, use animattion ease-out and repeat it only 1 time */
+	   -moz-animation:fadeOut ease-out 1;
+			animation:fadeOut ease-out 1;
+ 
+	-webkit-animation-fill-mode:forwards;  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+	   -moz-animation-fill-mode:forwards;
+			animation-fill-mode:forwards;
+ 
+	-webkit-animation-duration:1s;
+	   -moz-animation-duration:1s;
+			animation-duration:1s;
+}
