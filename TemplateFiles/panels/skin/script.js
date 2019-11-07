@@ -1,8 +1,13 @@
-var expansionDiv,closeButton,expandButton,clickthroughButton,staticImage,adId,fadeAnimation;
+var expansionDiv,
+	closeButton,
+	expandButton,
+	clickthroughButton,
+	staticImage,
+	adId,
+	fadeAnimation;
 var adKitReady = false;
 
-function initializeCreative()
-{
+function initializeCreative() {
 	if (adKitReady === false) {
 		adKitReady = true;
 		expansionDiv = document.getElementById("expansion");
@@ -13,126 +18,150 @@ function initializeCreative()
 
 		closeButton.addEventListener("click", handleCloseButtonClick);
 		expandButton.addEventListener("click", handleExpandButtonClick);
-		clickthroughButton.addEventListener("click", handleClickthroughButtonClick);
+		clickthroughButton.addEventListener(
+			"click",
+			handleClickthroughButtonClick
+		);
 
-	    try{
+		try {
 			adId = EB._adConfig.adId;
-		}catch(error){
+		} catch (error) {
 			adId = "LocalTest";
 		}
 
-		var itemName = adId+"_setDate";
+		var itemName = adId + "_setDate";
 		if (localStorage.getItem(itemName) === null) {
-			localStorage.setItem(itemName,new Date());
+			localStorage.setItem(itemName, new Date());
 		}
 
-	    startAd();
+		startAd();
 	}
 }
 
-
-function startAd(){
-	try{EB._sendMessage("setInfo",{topGap:setup.topGap});}catch(err){}
+function startAd() {
+	try {
+		EB._sendMessage("setInfo", { topGap: setup.topGap });
+	} catch (err) {}
 	initStaticBG();
 	fadeIn(expansionDiv);
 }
 
-function initStaticBG(){
+function initStaticBG() {
 	staticImage.style.display = "block";
-	if(setup.autoExpand){
-		if (setup.autoExpandFrequency>0 && checkAutoExpandFrequency()===true ) {
-			setTimeout(function(){handleExpandButtonClick();},2500);
+	if (setup.autoExpand) {
+		if (
+			setup.autoExpandFrequency > 0 &&
+			checkAutoExpandFrequency() === true
+		) {
+			setTimeout(function() {
+				handleExpandButtonClick();
+			}, 2500);
 		}
 	}
 }
 
-function checkAutoExpandFrequency(){
-	var itemName = adId+"_autoExpansions";
+function checkAutoExpandFrequency() {
+	var itemName = adId + "_autoExpansions";
 	var remainingExpansions = localStorage.getItem(itemName);
 	if (remainingExpansions > 0 || remainingExpansions === null) {
-		remainingExpansions = remainingExpansions === null ? setup.autoExpandFrequency -1 : remainingExpansions-1;
-		localStorage.setItem(itemName,remainingExpansions);
+		remainingExpansions =
+			remainingExpansions === null
+				? setup.autoExpandFrequency - 1
+				: remainingExpansions - 1;
+		localStorage.setItem(itemName, remainingExpansions);
 		return true;
-	}else{
-		if (checkCookieDate()===true) {
-			remainingExpansions = setup.autoExpandFrequency -1;
-			localStorage.setItem(itemName,remainingExpansions);
+	} else {
+		if (checkCookieDate() === true) {
+			remainingExpansions = setup.autoExpandFrequency - 1;
+			localStorage.setItem(itemName, remainingExpansions);
 			return true;
 		}
 		return false;
 	}
-	
 }
 
-function checkCookieDate(){
-	var itemName = adId+"_setDate";
+function checkCookieDate() {
+	var itemName = adId + "_setDate";
 	var cookieDate = new Date(localStorage.getItem(itemName));
 	var actualDate = new Date();
-	var diff = (actualDate - cookieDate)/(1000*60*60*24);
+	var diff = (actualDate - cookieDate) / (1000 * 60 * 60 * 24);
 	if (diff >= 1) {
-		localStorage.setItem(itemName,actualDate);
+		localStorage.setItem(itemName, actualDate);
 		return true;
-	}else{
+	} else {
 		return false;
 	}
 }
-function handleCloseButtonClick()
-{
+function handleCloseButtonClick() {
 	EB.userActionCounter("Collapsed");
 	fadeOut(closeButton);
 	fadeIn(expandButton);
 
-	try{EB._sendMessage("collapseRequest",{});}catch(err){}
+	try {
+		EB._sendMessage("collapseRequest", {});
+	} catch (err) {}
 
 	expandButton.removeEventListener("click", handleExpandButtonClick);
-	setTimeout(function(){
+	setTimeout(function() {
 		expandButton.addEventListener("click", handleExpandButtonClick);
-	},1000);
+	}, 1000);
 }
-function handleExpandButtonClick()
-{
+function handleExpandButtonClick() {
 	EB.userActionCounter("Expanded");
 	fadeIn(closeButton);
 	fadeOut(expandButton);
 
-	try{EB._sendMessage("expansionRequest",{});}catch(err){}
+	try {
+		EB._sendMessage("expansionRequest", {});
+	} catch (err) {}
 
 	closeButton.removeEventListener("click", handleCloseButtonClick);
-	setTimeout(function(){
+	setTimeout(function() {
 		closeButton.addEventListener("click", handleCloseButtonClick);
-	},1000);
+	}, 1000);
 }
 
-function handleClickthroughButtonClick()
-{
+function handleClickthroughButtonClick() {
 	EB.clickthrough();
 }
 
-function fadeIn(elem){
+function fadeIn(elem) {
 	elem.style.display = "block";
-    elem.classList.add("fade-in");
-    setTimeout(function(){
-    	elem.classList.remove("fade-in");
-    },1000);
+	elem.classList.add("fade-in");
+	setTimeout(function() {
+		elem.classList.remove("fade-in");
+	}, 1000);
 }
-function fadeOut(elem){
- 	elem.classList.add("fade-out");   
-    setTimeout(function(){
-    	elem.style.display = "none";
-    	elem.classList.remove("fade-out");
-    },1000);
+function fadeOut(elem) {
+	elem.classList.add("fade-out");
+	setTimeout(function() {
+		elem.style.display = "none";
+		elem.classList.remove("fade-out");
+	}, 1000);
 }
 
-window.addEventListener("message", function(event){
-	try{
-		var obj = JSON.parse(event.data);
-		switch(obj.type){
-			case "baseExpansion":
-				handleExpandButtonClick();
-			break;
+function adaptTopPosition(pixels) {
+	expandButton.style.top = expandButton.offsetTop + pixels + "px";
+}
+
+window.addEventListener(
+	"message",
+	function(event) {
+		try {
+			var obj = JSON.parse(event.data);
+			switch (obj.type) {
+				case "sendCreativeId":
+					if (obj.data.marginTop != "" && obj.data.marginTop != "0") {
+						adaptTopPosition(obj.data.marginTop);
+					}
+					break;
+				case "baseExpansion":
+					handleExpandButtonClick();
+					break;
+			}
+		} catch (err) {
+			console.log("Error Panel: ", err);
 		}
-				
-	}catch(err){
-		console.log("Error Panel: ", err);
-	}
-}, false);
+	},
+	false
+);
